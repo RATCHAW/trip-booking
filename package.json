@@ -19,6 +19,7 @@
     "db:watch": "turbo -F @trip-booking/db db:watch",
     "db:stop": "turbo -F @trip-booking/db db:stop",
     "db:down": "turbo -F @trip-booking/db db:down",
+    "db:seed": "turbo -F @trip-booking/db db:seed",
     "check": "biome check --write ."
   },
   "dependencies": {
