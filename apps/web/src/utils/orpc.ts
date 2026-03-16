@@ -1,7 +1,7 @@
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
-import { createRouterClient } from "@orpc/server";
 import type { RouterClient } from "@orpc/server";
+import { createRouterClient } from "@orpc/server";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
@@ -11,33 +11,33 @@ import { appRouter } from "@trip-booking/api/routers/index";
 import { toast } from "sonner";
 
 export const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      toast.error(`Error: ${error.message}`, {
-        action: {
-          label: "retry",
-          onClick: query.invalidate,
-        },
-      });
-    },
-  }),
+	queryCache: new QueryCache({
+		onError: (error, query) => {
+			toast.error(`Error: ${error.message}`, {
+				action: {
+					label: "retry",
+					onClick: query.invalidate,
+				},
+			});
+		},
+	}),
 });
 
 const getORPCClient = createIsomorphicFn()
-  .server(() =>
-    createRouterClient(appRouter, {
-      context: async () => {
-        return createContext({ req: getRequest() });
-      },
-    }),
-  )
-  .client((): RouterClient<typeof appRouter> => {
-    const link = new RPCLink({
-      url: `${window.location.origin}/api/rpc`,
-    });
+	.server(() =>
+		createRouterClient(appRouter, {
+			context: async () => {
+				return createContext({ req: getRequest() });
+			},
+		}),
+	)
+	.client((): RouterClient<typeof appRouter> => {
+		const link = new RPCLink({
+			url: `${window.location.origin}/api/rpc`,
+		});
 
-    return createORPCClient(link);
-  });
+		return createORPCClient(link);
+	});
 
 export const client: RouterClient<typeof appRouter> = getORPCClient();
 

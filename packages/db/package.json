@@ -1,38 +1,38 @@
 {
-  "name": "@trip-booking/db",
-  "type": "module",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "scripts": {
-    "db:push": "drizzle-kit push",
-    "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate",
-    "db:start": "docker compose up -d",
-    "db:watch": "docker compose up",
-    "db:stop": "docker compose stop",
-    "db:down": "docker compose down",
-    "db:seed": "tsx src/seed.ts"
-  },
-  "dependencies": {
-    "@trip-booking/env": "workspace:*",
-    "dotenv": "catalog:",
-    "drizzle-orm": "catalog:",
-    "drizzle-seed": "^0.3.1",
-    "pg": "^8.17.1",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@trip-booking/config": "workspace:*",
-    "@types/pg": "catalog:",
-    "drizzle-kit": "^0.31.8",
-    "tsx": "^4.21.0",
-    "typescript": "^5"
-  }
+	"name": "@trip-booking/db",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {
+		"db:push": "drizzle-kit push",
+		"db:generate": "drizzle-kit generate",
+		"db:studio": "drizzle-kit studio",
+		"db:migrate": "drizzle-kit migrate",
+		"db:start": "docker compose up -d",
+		"db:watch": "docker compose up",
+		"db:stop": "docker compose stop",
+		"db:down": "docker compose down",
+		"db:seed": "tsx src/seed.ts"
+	},
+	"dependencies": {
+		"@trip-booking/env": "workspace:*",
+		"dotenv": "catalog:",
+		"drizzle-orm": "catalog:",
+		"drizzle-seed": "^0.3.1",
+		"pg": "^8.17.1",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@trip-booking/config": "workspace:*",
+		"@types/pg": "catalog:",
+		"drizzle-kit": "^0.31.8",
+		"tsx": "^4.21.0",
+		"typescript": "^5"
+	}
 }

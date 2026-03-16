@@ -1,29 +1,29 @@
 {
-  "name": "@trip-booking/api",
-  "type": "module",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "scripts": {},
-  "dependencies": {
-    "@orpc/client": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "@trip-booking/db": "workspace:*",
-    "@trip-booking/env": "workspace:*",
-    "@types/pg": "catalog:",
-    "dotenv": "catalog:",
-    "drizzle-orm": "catalog:",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@trip-booking/config": "workspace:*",
-    "typescript": "^5"
-  }
+	"name": "@trip-booking/api",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {},
+	"dependencies": {
+		"@orpc/client": "catalog:",
+		"@orpc/openapi": "catalog:",
+		"@orpc/server": "catalog:",
+		"@orpc/zod": "catalog:",
+		"@trip-booking/db": "workspace:*",
+		"@trip-booking/env": "workspace:*",
+		"@types/pg": "catalog:",
+		"dotenv": "catalog:",
+		"drizzle-orm": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@trip-booking/config": "workspace:*",
+		"typescript": "^5"
+	}
 }
