@@ -14,6 +14,7 @@
 		"@orpc/tanstack-query": "^1.13.6",
 		"@orpc/zod": "catalog:",
 		"@tailwindcss/vite": "^4.1.18",
+		"@tanstack/react-form": "^1.28.5",
 		"@tanstack/react-query": "^5.80.6",
 		"@tanstack/react-router": "^1.141.1",
 		"@tanstack/react-router-with-query": "^1.130.17",
