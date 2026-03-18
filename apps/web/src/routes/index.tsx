@@ -1,3 +1,4 @@
+import { useForm } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@trip-booking/ui/components/button";
@@ -8,8 +9,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@trip-booking/ui/components/card";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@trip-booking/ui/components/field";
 import { Input } from "@trip-booking/ui/components/input";
-import { Label } from "@trip-booking/ui/components/label";
 import {
 	Select,
 	SelectContent,
@@ -19,6 +25,7 @@ import {
 } from "@trip-booking/ui/components/select";
 import { Skeleton } from "@trip-booking/ui/components/skeleton";
 import { ArrowRight, Calendar, MapPin, Search, Users } from "lucide-react";
+import { z } from "zod";
 import { orpc } from "@/utils/orpc";
 
 type TripSearch = {
@@ -29,6 +36,12 @@ type TripSearch = {
 
 const getSearchValue = (value: unknown) =>
 	typeof value === "string" && value.length > 0 ? value : undefined;
+
+const searchFormSchema = z.object({
+	departureCity: z.string().min(1, "Departure city is required."),
+	arrivalCity: z.string().min(1, "Arrival city is required."),
+	date: z.string().min(1, "Date is required."),
+});
 
 export const Route = createFileRoute("/")({
 	validateSearch: (search: Record<string, unknown>): TripSearch => ({
@@ -69,20 +82,25 @@ function HomeComponent() {
 		enabled: hasSearchParams,
 	});
 
-	const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const formData = new FormData(e.currentTarget);
-		const nextSearch = {
-			departureCity: getSearchValue(formData.get("departureCity")),
-			arrivalCity: getSearchValue(formData.get("arrivalCity")),
-			date: getSearchValue(formData.get("date")),
-		};
-
-		if (nextSearch.departureCity && nextSearch.arrivalCity && nextSearch.date) {
-			navigate({ search: nextSearch });
-		}
-	};
+	const searchForm = useForm({
+		defaultValues: {
+			departureCity,
+			arrivalCity,
+			date,
+		},
+		validators: {
+			onSubmit: searchFormSchema,
+		},
+		onSubmit: ({ value }) => {
+			navigate({
+				search: {
+					departureCity: getSearchValue(value.departureCity),
+					arrivalCity: getSearchValue(value.arrivalCity),
+					date: getSearchValue(value.date),
+				},
+			});
+		},
+	});
 
 	return (
 		<div className="mx-auto max-w-4xl p-6">
@@ -91,61 +109,104 @@ function HomeComponent() {
 			<Card>
 				<CardContent>
 					<form
-						key={[departureCity, arrivalCity, date].join("|")}
-						onSubmit={handleSearch}
+						onSubmit={(e) => {
+							e.preventDefault();
+							void searchForm.handleSubmit();
+						}}
 						className="flex flex-col gap-4 md:flex-row md:items-end"
 					>
-						<div className="flex flex-1 flex-col gap-2">
-							<Label htmlFor="departure">Departure City</Label>
-							<Select
+						<FieldGroup className="flex-1 md:flex-row md:items-end">
+							<searchForm.Field
 								name="departureCity"
-								required
-								defaultValue={departureCity || undefined}
-							>
-								<SelectTrigger id="departure">
-									<SelectValue placeholder="Select city" />
-								</SelectTrigger>
-								<SelectContent>
-									{CITIES.map((city) => (
-										<SelectItem key={city} value={city}>
-											{city}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
+								children={(field) => {
+									const isInvalid =
+										searchForm.state.isSubmitted && !field.state.meta.isValid;
 
-						<div className="flex flex-1 flex-col gap-2">
-							<Label htmlFor="arrival">Arrival City</Label>
-							<Select
-								name="arrivalCity"
-								required
-								defaultValue={arrivalCity || undefined}
-							>
-								<SelectTrigger id="arrival">
-									<SelectValue placeholder="Select city" />
-								</SelectTrigger>
-								<SelectContent>
-									{CITIES.map((city) => (
-										<SelectItem key={city} value={city}>
-											{city}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="flex flex-1 flex-col gap-2">
-							<Label htmlFor="date">Date</Label>
-							<Input
-								id="date"
-								name="date"
-								type="date"
-								required
-								defaultValue={date}
+									return (
+										<Field data-invalid={isInvalid} className="flex-1">
+											<FieldLabel htmlFor={field.name}>
+												Departure City
+											</FieldLabel>
+											<Select
+												value={field.state.value}
+												onValueChange={field.handleChange}
+											>
+												<SelectTrigger id={field.name}>
+													<SelectValue placeholder="Select city" />
+												</SelectTrigger>
+												<SelectContent>
+													{CITIES.map((city) => (
+														<SelectItem key={city} value={city}>
+															{city}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
 							/>
-						</div>
+							<searchForm.Field
+								name="arrivalCity"
+								children={(field) => {
+									const isInvalid =
+										searchForm.state.isSubmitted && !field.state.meta.isValid;
 
+									return (
+										<Field data-invalid={isInvalid} className="flex-1">
+											<FieldLabel htmlFor={field.name}>
+												Arrival City
+											</FieldLabel>
+											<Select
+												value={field.state.value}
+												onValueChange={field.handleChange}
+											>
+												<SelectTrigger id={field.name}>
+													<SelectValue placeholder="Select city" />
+												</SelectTrigger>
+												<SelectContent>
+													{CITIES.map((city) => (
+														<SelectItem key={city} value={city}>
+															{city}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+							<searchForm.Field
+								name="date"
+								children={(field) => {
+									const isInvalid =
+										searchForm.state.isSubmitted && !field.state.meta.isValid;
+
+									return (
+										<Field data-invalid={isInvalid} className="flex-1">
+											<FieldLabel htmlFor={field.name}>Date</FieldLabel>
+											<Input
+												id={field.name}
+												name={field.name}
+												type="date"
+												value={field.state.value}
+												onBlur={field.handleBlur}
+												onChange={(e) => field.handleChange(e.target.value)}
+											/>
+											{isInvalid && (
+												<FieldError errors={field.state.meta.errors} />
+											)}
+										</Field>
+									);
+								}}
+							/>
+						</FieldGroup>
 						<Button type="submit">
 							<Search className="mr-2 h-4 w-4" />
 							Search
