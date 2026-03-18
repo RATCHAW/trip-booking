@@ -1,98 +1,52 @@
-# trip-booking
+# Trip Search and Booking
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Self, ORPC, and more.
+## Setup Instructions
 
-## Features
-
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Start** - SSR framework with TanStack Router
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Biome** - Linting and formatting
-- **Turborepo** - Optimized monorepo build system
-
-## Getting Started
-
-First, install the dependencies:
+1. Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-## Database Setup
-
-This project uses PostgreSQL with Drizzle ORM.
-
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/web/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
+2. Copy the environment file:
 
 ```bash
-pnpm run db:push
+cp .env.example apps/web/.env
 ```
 
-Then, run the development server:
+3. Start PostgreSQL:
 
 ```bash
-pnpm run dev
+pnpm run db:start
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application.
-
-## UI Customization
-
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
-
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
-
-### Add more shared components
-
-Run this from the project root to add more primitives to the shared UI package:
+4. Run the database migrations:
 
 ```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
+pnpm run db:migrate
 ```
 
-Import shared components like this:
+5. Seed the database:
 
-```tsx
-import { Button } from "@trip-booking/ui/components/button";
+```bash
+pnpm run db:seed
 ```
 
-### Add app-specific blocks
+6. Start the app:
 
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Git Hooks and Formatting
-
-- Format and lint fix: `pnpm run check`
-
-## Project Structure
-
-```
-trip-booking/
-├── apps/
-│   └── web/         # Fullstack application (React + TanStack Start)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   └── db/          # Database schema & queries
+```bash
+pnpm run dev:web
 ```
 
-## Available Scripts
+The app runs at `http://localhost:3001`.
 
-- `pnpm run dev`: Start all applications in development mode
-- `pnpm run build`: Build all applications
-- `pnpm run dev:web`: Start only the web application
-- `pnpm run check-types`: Check TypeScript types across all apps
-- `pnpm run db:push`: Push schema changes to database
-- `pnpm run db:generate`: Generate database client/types
-- `pnpm run db:migrate`: Run database migrations
-- `pnpm run db:studio`: Open database studio UI
-- `pnpm run check`: Run Biome formatting and linting
+## Sample Search Options
+
+After running `pnpm run db:seed`, you can use these search values to get results:
+
+- Departure: `Tangier` | Arrival: `Casablanca` | Date: `2026-03-17`
+- Departure: `Casablanca` | Arrival: `Rabat` | Date: `2026-03-17`
+- Departure: `Marrakech` | Arrival: `Agadir` | Date: `2026-03-18`
+- Departure: `Fes` | Arrival: `Tangier` | Date: `2026-03-19`
+- Departure: `Rabat` | Arrival: `Oujda` | Date: `2026-03-20`
+- Departure: `Agadir` | Arrival: `Marrakech` | Date: `2026-03-21`
